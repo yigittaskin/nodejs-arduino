@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ardunio ve Node.js ile Server Harika</title>
+    <link rel="stylesheet" type="text/css" href="public/style.css" />
+</head>
+<script src="node_modules/socket.io/client-dist/socket.io.js"></script>
+<script>
+    const socket = io.connect();
+
+    window.onload = function () {
+        // Otopark durumunu dinle ve ekrana yaz
+        socket.on('parkStatus', function (status) {
+            const [distance2, distance3, waterValue, pencereDurum, pirState, nemYuzdesi, temperatureC, p1,
+                p2
+            ] = status.split(',');
+            console.log(p1, p2);
+            console.log(temperatureC + '%');
+
+            document.getElementById('sicaklik').innerText = `${temperatureC} C`;
+            document.getElementById('nem').innerText = `${nemYuzdesi} %`;
+
+            if (p1 == '1' && p2 == '1') {
+                document.getElementById('otoparkDurum').innerText = `DOLU`;
+            } else {
+                document.getElementById('otoparkDurum').innerText = `BOŞ`;
+            }
+
+            if (p1 == '1') {
+                document.getElementById('park-1').innerHTML = `<p>Park Alanı-1</p>
+                <img src="./public/images/park-dolu.svg" alt="Park Boş">`;
+            }
+            if (p1 == '0') {
+                document.getElementById('park-1').innerHTML = `<p>Park Alanı-1</p>
+                <img src="./public/images/park-bos.svg" alt="Park Boş">`;
+            }
+            if (p2 == '1') {
+                document.getElementById('park-2').innerHTML = `<p>Park Alanı-2</p>
+                <img src="./public/images/park-dolu.svg" alt="Park Boş">`;
+            }
+            if (p2 == '0') {
+                document.getElementById('park-2').innerHTML = `<p>Park Alanı-2</p>
+                <img src="./public/images/park-bos.svg" alt="Park Boş">`;
+            }
+
+            if (pirState == '1') {
+                document.getElementById('guvenlik').innerHTML = `UYARI`;
+            }
+            if (pirState == '0') {
+                document.getElementById('guvenlik').innerHTML = `GÜVENLİ`;
+            }
+
+            if (waterValue > 300) {
+                document.getElementById('hava').innerHTML = `<p>Yağmurlu</p>`;
+                document.getElementById('hava-icon').innerHTML = `
+                <img src="./public/images/rain.svg" alt="Yağmurlu">`;
+            } else {
+                document.getElementById('hava').innerHTML = `<p>Güneşli</p>`;
+                document.getElementById('hava-icon').innerHTML = `
+                <img src="./public/images/cloudsun.svg" alt="Güneşli Bulutlu">`;
+            }
+
+            if (pencereDurum == 'acik') {
+                document.getElementById('pencereDurum').innerHTML = `<p>Pencere Açık</p>
+                <img src="./public/images/cam-ac.svg" alt="Pencere Açık">`;
+            }
+
+            if (pencereDurum == 'kapali') {
+                document.getElementById('pencereDurum').innerHTML = `<p>Pencere Kapalı</p>
+                <img src="./public/images/cam-kapat.svg" alt="Pencere Kapalı">`;
+            }
+
+            // Şu anki tarih ve saat bilgisini al
+            var today = new Date();
+
+            // Saati ve dakikayı al
+            var hour = today.getHours();
+            var minute = today.getMinutes();
+
+            // Günü, ayı ve yılı al
+            var day = today.getDate();
+            var month = today.getMonth() + 1; // JavaScript'te aylar 0'dan başlar, bu yüzden 1 ekliyoruz.
+            var year = today.getFullYear();
+
+            // Saat ve dakika değerlerini iki haneli olarak düzenle
+            hour = formatTime(hour);
+            minute = formatTime(minute);
+
+            // Gün, ay ve yıl değerlerini iki haneli olarak düzenle
+            day = formatTime(day);
+            month = formatTime(month);
+
+            // Zaman formatını ayarla (örneğin 9.45 ve 01.05.2020 gibi)
+            var timeFormat = hour + '.' + minute;
+            var dateFormat = day + '.' + month + '.' + year;
+
+            document.getElementById('saat').innerHTML = `İyi Günler, Saat ${timeFormat}`
+            document.getElementById('tarih').innerHTML = ` <img height="35" src="./public/images/clock.svg" alt="Tarih"> ${dateFormat}`
+
+            // Saat ve dakika değerlerini iki haneli olarak düzenlemek için yardımcı fonksiyon
+            function formatTime(time) {
+                return time < 10 ? "0" + time : time;
+            }
+
+        });
+
+        document.getElementById('led1').addEventListener('click', function () {
+            toggleLED('led1', '/led1/on', '/led1/off');
+        });
+
+        document.getElementById('led2').addEventListener('click', function () {
+            toggleLED('led2', '/led2/on', '/led2/off');
+        });
+
+        document.getElementById('kapi1').addEventListener('click', function () {
+            toggleKapi('kapi1', '/kapi/on', '/kapi/off');
+        });
+    }
+
+    function toggleLED(ledId, onUrl, offUrl) {
+        var imgElement = document.getElementById(ledId);
+        var isOn = imgElement.src.includes('lamba-acik');
+
+        if (isOn) {
+            // LED kapatma isteği gönder
+            fetch(offUrl).then(response => {
+                if (response.ok) {
+                    imgElement.src = './public/images/lamba-kapat.svg';
+                } else {
+                    console.error('LED kapatılamadı');
+                }
+            });
+        } else {
+            // LED açma isteği gönder
+            fetch(onUrl).then(response => {
+                if (response.ok) {
+                    imgElement.src = './public/images/lamba-acik.svg';
+                } else {
+                    console.error('LED açılamadı');
+                }
+            });
+        }
+    }
+
+    function toggleKapi(kapiId, kapionUrl, kapioffUrl) {
+        var kapiimgElement = document.getElementById(kapiId);
+        var kapiisOn = kapiimgElement.src.includes('kapi-kapat');
+
+        if (!kapiisOn) {
+            // Kapı kapatma isteği gönder
+            fetch(kapioffUrl).then(response => {
+                if (response.ok) {
+                    kapiimgElement.src = './public/images/kapi-kapat.svg';
+                } else {
+                    console.error('Kapı açıldı');
+                }
+            });
+        } else {
+            // Kapi açma isteği gönder
+            fetch(kapionUrl).then(response => {
+                if (response.ok) {
+                    kapiimgElement.src = './public/images/kapi-ac.svg';
+                } else {
+                    console.error('Kapı kapalı');
+                }
+            });
+        }
+    }
+
+</script>
+
+<body>
+
+    <div class="home-bg">
+        <div class="content">
+            <div class="date">
+                <h2 id="saat"></h2>
+                <h2 id="tarih"></h2>
+            </div>
+            <div class="info-top">
+                <div class="sicaklik">
+                    <div class="yazi">
+                        <p class="title">SICAKLIK</p>
+                        <p class="deger" id="sicaklik"></p>
+                    </div>
+                    <div class="icon">
+                        <img src="./public/images/sicaklık.svg" alt="Sıcaklık">
+                    </div>
+                </div>
+                <div class="nem">
+                    <div class="yazi">
+                        <p class="title">HAVA DURUMU</p>
+                        <p class="deger" id="hava"></p>
+                    </div>
+                    <div class="icon" id="hava-icon">
+                    </div>
+                </div>
+                <div class="otopark">
+                    <div class="yazi">
+                        <p class="title">OTOPARK</p>
+                        <p class="deger" id="otoparkDurum"></p>
+                    </div>
+                    <div class="icon">
+                        <img src="./public/images/otopark.svg" alt="Otopark">
+                    </div>
+                </div>
+                <div class="guvenlik">
+                    <div class="yazi">
+                        <p class="title">GÜVENLİK</p>
+                        <p class="deger" id="guvenlik"></p>
+                    </div>
+                    <div class="icon">
+                        <img src="./public/images/guvenlik.svg" alt="Güvenlik">
+                    </div>
+                </div>
+            </div>
+            <div class="durum">
+                <div class="otopark-durum">
+                    <div class="otopark-durum-title">
+                        <h2>Otopark Durum</h2>
+                    </div>
+                    <div class="container">
+                        <div class="park-alani" id="park-1">
+
+                        </div>
+                        <div class="park-alani" id="park-2">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="bitki-durum">
+                    <div class="bitki-durum-title">
+                        <h2>Bitki Durum</h2>
+                    </div>
+                    <div class="container">
+                        <div class="bitki-text">
+                            <p>Nem Oranı: <br> <strong id="nem"></strong> </p>
+                        </div>
+                        <div class="bitki-alani">
+                            <img src="./public/images/bitki.svg" alt="Bitki">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="controller">
+                <div class="cam-durum">
+                    <div class="cam-durum-title">
+                        <h2>Cam ve Kapı Durum</h2>
+                    </div>
+                    <div class="container">
+                        <div class="cam-alani" id="pencereDurum">
+                        </div>
+                        <div class="kapi-alani">
+                            <p>Kapı Aç/Kapat</p>
+                            <img id="kapi1" src="./public/images/kapi-kapat.svg" alt="Kapı" onclick="toggleKapi('kapi1', '/kapi/on', '/kapi/off')">
+                        </div>
+                    </div>
+                </div>
+                <div class="odalar">
+                    <div class="oda">
+                        <h2>Oda 1</h2>
+                        <img id="led1" src="./public/images/lamba-kapat.svg" alt="Lamba Açık" onclick="toggleLED('led1', '/led1/on', '/led1/off')">
+                    </div>
+                    <div class="oda">
+                        <h2>Oda 2</h2>
+                        <img id="led2" src="./public/images/lamba-kapat.svg" alt="Lamba Açık" onclick="toggleLED('led2', '/led2/on', '/led2/off')">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

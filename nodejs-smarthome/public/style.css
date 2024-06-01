@@ -1,0 +1,285 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: url('./images/arkaplan.svg');
+  backdrop-filter: blur(2px);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+.home-bg {
+  margin: 0 auto;
+  width: 100%;
+}
+
+.date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px
+}
+
+h2 {
+  max-width: 1200px;
+  padding: 18px 0;
+  color: white;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.date h2:last-child {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.content {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  width: 100%;
+  padding: 12px 24px;
+  margin: 0 auto;
+}
+
+.info-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.sicaklik, .nem, .otopark, .guvenlik {
+  display: flex;
+  background-color: #e5e5e5b0;
+  border-radius: 8px;
+  justify-content: space-around;
+  align-items: center;
+  width: 230px;
+}
+
+.yazi {
+  padding: 12px 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.yazi .title {
+  font-size: 20px;
+  font-weight: 400;
+  color: black;
+}
+
+.yazi .deger {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.info-top .icon img {
+  height: 100px;
+}
+
+.nem img, .otopark img, .guvenlik img {
+  padding: 10px;
+}
+
+.controller {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  max-height: 220px;
+  height: 220px;
+  gap: 60px;
+}
+
+.odalar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #e5e5e5b0;
+  border-radius: 8px;
+  width: 48%;
+  padding: 20px;
+  max-height: 220px;
+  height: 220px;
+}
+
+.oda {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.oda h2 {
+  color: black;
+}
+
+.cam-kapi {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #e5e5e5b0;
+  border-radius: 8px;
+  width: 48%;
+  height: 220px;
+}
+
+.cam-kapi .container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+}
+
+.cam {
+  display: flex;
+  justify-content: space-around;
+  gap: 30px;
+  padding: 20px;
+}
+
+.kapi {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  gap: 70px;
+}
+
+.cam-1, .cam-2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.cam-kapi h2 {
+  color: black;
+}
+
+.kapi img {
+  margin-top: 12px;
+}
+
+.kapi h2 {
+  margin-top: 12px;
+}
+
+.durum {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  gap: 50px;
+}
+
+.otopark-durum {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #e5e5e5b0;
+  border-radius: 8px;
+  height: 220px;
+  flex: 1;
+}
+
+.durum .container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 20px 20px 20px;
+  gap: 60px;
+}
+
+.park-alani {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.durum h2 {
+  color: black;
+}
+
+.cam-durum {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #e5e5e5b0;
+  border-radius: 8px;
+  height: 220px;
+  flex: 1;
+}
+
+.cam-durum .container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 20px 20px 20px;
+  width: 100%;
+}
+
+.cam-alani, .kapi-alani {
+  text-align: center;
+}
+
+.cam-durum h2 {
+  color: black;
+}
+
+.cam-alani p {
+  padding-bottom: 12px;
+}
+
+.kapi-alani p {
+  padding-bottom: 6px;
+}
+
+.bitki-durum {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #e5e5e5b0;
+  border-radius: 8px;
+  height: 220px;
+  flex: 1;
+}
+
+.bitki-durum h2 {
+  color: black;
+}
+
+.bitki-durum p:last-child {
+  margin-top: 18px;
+}
+
+.bitki-text {
+  margin-top: -20px;
+  font-size: 20px;
+  text-align: center;
+}
